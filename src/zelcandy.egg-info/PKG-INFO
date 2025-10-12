@@ -1,0 +1,26 @@
+Metadata-Version: 2.4
+Name: zelcandy
+Version: 1.0.0
+Summary: Shared configuration and path management for Zel CLI tools
+Author: Zeldean
+License: MIT
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: click>=8.1
+
+# ZelCandy
+
+Shared configuration and path management for Zel CLI tools.
+
+## Usage
+
+```bash
+# Set paths
+zelcandy path set vault /mnt/Vault/Second-Brain
+zelcandy path set budget-data ~/Documents/Budget
+
+# List paths
+zelcandy path list
+
+# Get a path
+zelcandy path get vault

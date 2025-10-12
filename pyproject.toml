@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=65", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "zelcandy"
+version = "1.0.0"
+description = "Shared configuration and path management for Zel CLI tools"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+
+authors = [
+  { name = "Zeldean" }
+]
+
+dependencies = [
+  "click>=8.1"
+]
+
+[project.scripts]
+zelcandy = "zelcandy.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
