@@ -23,3 +23,9 @@ zelcandy = "zelcandy.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+zelcandy = ["data/*.json"]

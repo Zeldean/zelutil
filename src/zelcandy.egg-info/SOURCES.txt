@@ -1,8 +1,13 @@
 README.md
+bootstrap-zel.py
 pyproject.toml
 src/zelcandy/__init__.py
 src/zelcandy/cli.py
+src/zelcandy/data/__init__.py
+src/zelcandy/data/zel-modules.json
+src/zelcandy/install.py
 src/zelcandy/paths.py
+src/zelcandy/registry.py
 src/zelcandy/state.py
 src/zelcandy.egg-info/PKG-INFO
 src/zelcandy.egg-info/SOURCES.txt

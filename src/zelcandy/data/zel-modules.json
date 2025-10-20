@@ -1,0 +1,39 @@
+{
+  "modules": {
+    "zelcandy": {
+      "name": "ZelCandy",
+      "description": "Shared configuration for Zel CLI tools",
+      "git_url": "https://github.com/Zeldean/zelcandy.git",
+      "installed_version": null,
+      "dependencies": ["click>=8.1"]
+    },
+    "zeljournal": {
+      "name": "ZelJournal",
+      "description": "Journal and note-taking utilities",
+      "git_url": "https://github.com/Zeldean/zeljournal.git",
+      "installed_version": null,
+      "dependencies": ["click"]
+    },
+    "zelmedia": {
+      "name": "ZelMedia",
+      "description": "Media processing and management tools",
+      "git_url": "https://github.com/Zeldean/zelmedia.git",
+      "installed_version": null,
+      "dependencies": ["click"]
+    },
+    "zelscript": {
+      "name": "ZelScript",
+      "description": "Script utilities and tools",
+      "git_url": "https://github.com/Zeldean/zelscript.git",
+      "installed_version": null,
+      "dependencies": ["click"]
+    },
+    "zeltimer": {
+      "name": "ZelTimer",
+      "description": "Time tracking tool",
+      "git_url": "https://github.com/Zeldean/zeltimer.git",
+      "installed_version": null,
+      "dependencies": ["click"]
+    }
+  }
+}

@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
+import json
 import os
-import sys
-import subprocess
 import platform
+import subprocess
+import sys
+from importlib import resources
 from pathlib import Path
 
 def get_venv_path():
@@ -51,11 +53,29 @@ def add_to_path(bin_path):
     print(f"Added to {shell_config}")
     print(f"Restart shell or run: source {shell_config}")
 
+def load_modules():
+    """Load module configuration from packaged metadata."""
+    try:
+        with resources.open_text("zelcandy.data", "zel-modules.json", encoding="utf-8") as fh:
+            payload = json.load(fh)
+    except (FileNotFoundError, ModuleNotFoundError):
+        return {}
+    except json.JSONDecodeError as exc:
+        print(f"Warning: failed to parse module metadata: {exc}")
+        return {}
+
+    return payload.get("modules", {})
+
 def main():
     # Find parent directory with all zel components
-    parent_dir = Path(__file__).parent.parent
+    parent_dir = Path(__file__).parent.parent.parent.parent
     venv_path = get_venv_path()
-    components = ["zelcandy", "zeljournal", "zelmedia", "zeltimer"]
+    modules = load_modules()
+    components = list(modules.keys())
+
+    if not components:
+        print("No module metadata available; nothing to install.")
+        return
     
     print(f"Creating zel virtual environment at {venv_path}...")
     subprocess.run([sys.executable, "-m", "venv", str(venv_path)], check=True)
