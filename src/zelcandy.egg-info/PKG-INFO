@@ -12,7 +12,48 @@ Requires-Dist: click>=8.1
 
 Shared configuration and path management for Zel CLI tools.
 
+## Installation
+
+### Quick Install (Recommended)
+
+Install to default location:
+```bash
+curl -sSL https://raw.githubusercontent.com/Zeldean/zelcandy/main/bootstrap-zel.py | python3
+```
+
+### Custom Install Location
+
+Install to a specific directory:
+```bash
+curl -sSL https://raw.githubusercontent.com/Zeldean/zelcandy/main/bootstrap-zel.py | python3 - --install-dir ~/my-zel-tools
+```
+
+### Default Locations
+
+**Installation Directory:**
+- Linux/macOS: `~/.local/share/zel-tools`
+- Windows: `%LOCALAPPDATA%\zel-tools`
+
+**Virtual Environment:**
+- Linux/macOS: `~/.local/share/zel-env`
+- Windows: `%LOCALAPPDATA%\zel-env`
+
+### Manual Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/Zeldean/zelcandy.git
+cd zelcandy
+```
+
+2. Run the install script:
+```bash
+python3 src/zelcandy/install.py
+```
+
 ## Usage
+
+### Path Management
 
 ```bash
 # Set paths
@@ -24,3 +65,17 @@ zelcandy path list
 
 # Get a path
 zelcandy path get vault
+```
+
+### Module Management
+
+```bash
+# List available modules
+zelcandy install list
+
+# Install all modules
+zelcandy install all
+
+# Install specific module (from GitHub)
+zelcandy install module zeltimer
+```
