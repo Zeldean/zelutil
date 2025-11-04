@@ -15,6 +15,7 @@ import platform
 import tempfile
 import shutil
 import argparse
+import json
 from pathlib import Path
 
 def get_install_dir():
@@ -62,6 +63,20 @@ def main():
     state_dir.mkdir(parents=True, exist_ok=True)
     
     print(f"State directory: {state_dir}")
+    
+    # Store install location in paths.json for other commands to use
+    paths_file = state_dir / "paths.json"
+    paths_data = {}
+    if paths_file.exists():
+        with open(paths_file, 'r') as f:
+            paths_data = json.load(f)
+    
+    paths_data["install_dir"] = str(install_dir)
+    
+    with open(paths_file, 'w') as f:
+        json.dump(paths_data, f, indent=2)
+    
+    print(f"Stored install location: {install_dir}")
     
     # Check if already in PATH
     venv_path = get_venv_path()

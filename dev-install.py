@@ -10,6 +10,7 @@ import os
 import sys
 import subprocess
 import platform
+import json
 from pathlib import Path
 
 def get_dev_venv_path():
@@ -39,6 +40,27 @@ def main():
     
     print("Installing zelutil in development mode...")
     subprocess.run([str(pip_exe), "install", "-e", "."], check=True)
+    
+    # Store install location in paths.json
+    if platform.system() == "Windows":
+        state_dir = Path.home() / "AppData" / "Local" / "zel" / "state"
+    else:
+        state_dir = Path.home() / ".local" / "state" / "zel"
+    
+    state_dir.mkdir(parents=True, exist_ok=True)
+    paths_file = state_dir / "paths.json"
+    
+    paths_data = {}
+    if paths_file.exists():
+        with open(paths_file, 'r') as f:
+            paths_data = json.load(f)
+    
+    # For dev install, use parent directory as install location
+    install_dir = Path(__file__).parent.parent
+    paths_data["install_dir"] = str(install_dir)
+    
+    with open(paths_file, 'w') as f:
+        json.dump(paths_data, f, indent=2)
     
     print(f"\nDevelopment setup complete!")
     print(f"Virtual environment: {venv_path}")

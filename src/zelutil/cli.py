@@ -39,8 +39,26 @@ def util():
     pass
 
 def get_install_dir():
-    """Get installation directory"""
+    """Get installation directory from stored paths or default"""
     import platform
+    
+    # Try to get stored install location
+    if platform.system() == "Windows":
+        state_dir = Path.home() / "AppData" / "Local" / "zel" / "state"
+    else:
+        state_dir = Path.home() / ".local" / "state" / "zel"
+    
+    paths_file = state_dir / "paths.json"
+    if paths_file.exists():
+        try:
+            with open(paths_file, 'r') as f:
+                paths_data = json.load(f)
+                if "install_dir" in paths_data:
+                    return Path(paths_data["install_dir"])
+        except (json.JSONDecodeError, KeyError):
+            pass
+    
+    # Fall back to default location
     if platform.system() == "Windows":
         return Path.home() / "AppData" / "Local" / "zel"
     else:
