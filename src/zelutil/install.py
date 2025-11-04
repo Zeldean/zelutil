@@ -54,12 +54,20 @@ def add_to_path(bin_path):
     print(f"Restart shell or run: source {shell_config}")
 
 def load_modules():
-    """Load module configuration from packaged metadata."""
+    """Load module configuration from packaged metadata or local file."""
     try:
+        # Try to load from installed package first
         with resources.open_text("zelutil.data", "zel-modules.json", encoding="utf-8") as fh:
             payload = json.load(fh)
     except (FileNotFoundError, ModuleNotFoundError):
-        return {}
+        # Fall back to local file when package not installed
+        try:
+            modules_file = Path(__file__).parent / "data" / "zel-modules.json"
+            with open(modules_file, encoding="utf-8") as fh:
+                payload = json.load(fh)
+        except (FileNotFoundError, json.JSONDecodeError) as exc:
+            print(f"Warning: failed to load module metadata: {exc}")
+            return {}
     except json.JSONDecodeError as exc:
         print(f"Warning: failed to parse module metadata: {exc}")
         return {}

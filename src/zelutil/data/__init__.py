@@ -1,1 +1,1 @@
-# Package marker for zelcandy data files.
+# Package marker for zelutil data files.
