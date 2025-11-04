@@ -75,7 +75,7 @@ def load_modules():
     except (FileNotFoundError, ModuleNotFoundError):
         # Fall back to local file when package not installed
         try:
-            modules_file = Path(__file__).parent / "data" / "zel-modules.json"
+            modules_file = Path(__file__).parent.parent / "data" / "zel-modules.json"
             with open(modules_file, encoding="utf-8") as fh:
                 payload = json.load(fh)
         except (FileNotFoundError, json.JSONDecodeError) as exc:
