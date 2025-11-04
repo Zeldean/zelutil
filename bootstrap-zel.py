@@ -93,7 +93,7 @@ def main():
     zelutil_dir = clone_zelutil(install_dir)
     
     # Run zelutil install script
-    install_script = zelutil_dir / "src" / "zelutil" / "install.py"
+    install_script = zelutil_dir / "src" / "zelutil" / "utils" / "install.py"
     print("Running zelutil install script...")
     subprocess.run([sys.executable, str(install_script)], check=True, cwd=str(zelutil_dir))
     

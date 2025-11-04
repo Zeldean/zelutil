@@ -8,9 +8,9 @@ from pathlib import Path
 
 import click
 
-from .paths import get_path, set_path
-from .registry import get_available_paths, get_path_info
-from .state import resolve_state_dir
+from .utils.paths import get_path, set_path
+from .utils.registry import get_available_paths, get_path_info
+from .utils.state import resolve_state_dir
 
 logger = logging.getLogger(__name__)
 
@@ -106,7 +106,7 @@ def list_modules():
 @install.command("all")
 def install_all():
     """Run the main install script to install all zel tools."""
-    install_script = Path(__file__).parent / "install.py"
+    install_script = Path(__file__).parent / "utils" / "install.py"
     if install_script.exists():
         click.echo("Running install script...")
         subprocess.run([sys.executable, str(install_script)], check=True)
