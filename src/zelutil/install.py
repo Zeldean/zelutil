@@ -7,12 +7,16 @@ import sys
 from importlib import resources
 from pathlib import Path
 
+def get_install_dir():
+    """Get installation directory"""
+    if platform.system() == "Windows":
+        return Path.home() / "AppData" / "Local" / "zel"
+    else:
+        return Path.home() / ".local" / "share" / "zel"
+
 def get_venv_path():
     """Get platform-appropriate venv path"""
-    if platform.system() == "Windows":
-        return Path.home() / "AppData" / "Local" / "zel-env"
-    else:
-        return Path.home() / ".local" / "share" / "zel-env"
+    return get_install_dir() / "venv"
 
 def get_shell_config():
     """Get shell config file path"""
@@ -75,8 +79,8 @@ def load_modules():
     return payload.get("modules", {})
 
 def main():
-    # Find parent directory with all zel components
-    parent_dir = Path(__file__).parent.parent.parent.parent
+    # Use install directory to find zel components
+    install_dir = get_install_dir()
     venv_path = get_venv_path()
     modules = load_modules()
     components = list(modules.keys())
@@ -100,17 +104,18 @@ def main():
     
     print("Installing zel components...")
     for component in components:
-        component_path = parent_dir / component
+        component_path = install_dir / component
         if component_path.exists():
             print(f"Installing {component}...")
             subprocess.run([str(pip_exe), "install", "-e", str(component_path)], check=True)
         else:
-            print(f"Skipping {component} (not found)")
+            print(f"Skipping {component} (not found at {component_path})")
     
     print("Adding to PATH...")
     add_to_path(bin_path)
     
     print("\nDone! All available zel tools installed.")
+    print(f"Installation directory: {install_dir}")
     print(f"Virtual environment: {venv_path}")
 
 if __name__ == "__main__":

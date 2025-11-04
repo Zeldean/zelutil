@@ -17,19 +17,16 @@ import shutil
 import argparse
 from pathlib import Path
 
-def get_default_install_dir():
-    """Get default installation directory"""
+def get_install_dir():
+    """Get installation directory"""
     if platform.system() == "Windows":
-        return Path.home() / "AppData" / "Local" / "zel-tools"
+        return Path.home() / "AppData" / "Local" / "zel"
     else:
-        return Path.home() / ".local" / "share" / "zel-tools"
+        return Path.home() / ".local" / "share" / "zel"
 
 def get_venv_path():
     """Get platform-appropriate venv path"""
-    if platform.system() == "Windows":
-        return Path.home() / "AppData" / "Local" / "zel-env"
-    else:
-        return Path.home() / ".local" / "share" / "zel-env"
+    return get_install_dir() / "venv"
 
 def clone_zelutil(install_dir):
     """Clone zelutil repository"""
@@ -42,16 +39,25 @@ def clone_zelutil(install_dir):
 
 def main():
     parser = argparse.ArgumentParser(description="Bootstrap Zel tools installation")
-    parser.add_argument("--install-dir", type=Path, default=get_default_install_dir(),
-                       help="Directory to install zel tools (default: ~/.local/share/zel-tools)")
+    parser.add_argument("--install-dir", type=Path, default=get_install_dir(),
+                       help="Directory to install zel tools (default: ~/.local/share/zel)")
     
     args = parser.parse_args()
     install_dir = args.install_dir
     
     print(f"Installing Zel tools to: {install_dir}")
     
-    # Create install directory
+    # Create install and state directories
     install_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Create state directory
+    if platform.system() == "Windows":
+        state_dir = Path.home() / "AppData" / "Local" / "zel" / "state"
+    else:
+        state_dir = Path.home() / ".local" / "state" / "zel"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    
+    print(f"State directory: {state_dir}")
     
     # Clone zelutil
     zelutil_dir = clone_zelutil(install_dir)

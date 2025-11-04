@@ -1,101 +1,58 @@
 # ZelUtil
 
-Shared configuration, state management, and metadata for the Zel CLI suite.
+The foundation of the Zel productivity suite - handles installation, configuration, and shared utilities for all Zel tools.
 
-## Why ZelUtil exists
+## Quick Start
 
-- Provides a single state directory (`~/.local/state/zel`) used by tools like
-  `zeljournal`, `zelmedia`, and `zeltimer`.
-- Stores reusable path aliases in `paths.json` so every module can resolve your
-  vaults, media folders, and timer logs consistently.
-- Ships a registry (`zelutil.data/zel-modules.json`) describing the Zel module
-  ecosystem, which powers simple install & discovery tooling.
-- Exposes convenience helpers (`resolve_state_dir`, `get_path`, `set_path`,
-  `get_available_paths`) for other packages to import.
+Install ZelUtil and set up the Zel ecosystem with one command:
 
-## Installation
-
-### Quick install (recommended)
-
-Install to the default locations:
 ```bash
 curl -sSL https://raw.githubusercontent.com/Zeldean/zelutil/main/bootstrap-zel.py | python3
 ```
 
-### Custom install location
+That's it! This will:
+- Download and set up ZelUtil
+- Create a dedicated environment for all Zel tools
+- Make the `zelutil` command available in your terminal
 
-Target a specific directory:
+## Custom Installation
+
+Want to install somewhere specific? Use the `--install-dir` option:
+
 ```bash
 curl -sSL https://raw.githubusercontent.com/Zeldean/zelutil/main/bootstrap-zel.py | python3 - --install-dir ~/my-zel-tools
 ```
 
-### Default locations
+## What Gets Installed Where
 
-**Installation directory**
-- Linux/macOS: `~/.local/share/zel-tools`
-- Windows: `%LOCALAPPDATA%\zel-tools`
+After installation, you'll have two main directories:
 
-**Shared virtual environment**
-- Linux/macOS: `~/.local/share/zel-env`
-- Windows: `%LOCALAPPDATA%\zel-env`
+### Installation Files
+**Location:** `~/.local/share/zel/` (Linux/macOS) or `%LOCALAPPDATA%\zel\` (Windows)
 
-### Manual install from source
+This contains:
+- `venv/` - The Python environment for all Zel tools
+- `zelutil/` - ZelUtil source code
+- Future Zel tools will be installed here too
 
-```bash
-git clone https://github.com/Zeldean/zelutil.git
-cd zelutil
-python3 src/zelutil/install.py
-```
+### Your Data
+**Location:** `~/.local/state/zel/` (all platforms)
 
-## State layout
+This is where your personal data lives:
+- Settings and preferences
+- Timer logs
+- Journal entries
+- File paths and bookmarks
 
-```text
-~/.local/state/zel/
-    paths.json        # key → absolute path registry shared by all modules
-    timers.json       # example: created by zeltimer
-    vault_index.json  # example: created by zeljournal
-```
+## Requirements
 
-The path currently resolves to `~/.local/state/zel` on every platform. Override
-it in your own tooling by calling `resolve_state_dir()` and storing files
-relative to the returned directory.
+- Python 3.8 or newer
+- Git (for downloading tools)
+- Internet connection (for initial setup)
 
-## CLI reference
+## Uninstalling
 
-### `zelutil path …`
-
-```bash
-zelutil path available        # see documented keys such as "vault", "media"
-zelutil path set vault /mnt/Vault/Second-Brain
-zelutil path get vault        # prints the stored value or errors if missing
-zelutil path list             # dump the current registry
-```
-
-Keys are described in `src/zelutil/registry.py` and include a short blurb,
-example path, and which modules consume them.
-
-### `zelutil install …`
-
-```bash
-zelutil install list          # show metadata from zel-modules.json
-zelutil install all           # run the bundled install script (bootstrap)
-zelutil install module zeltimer
-```
-
-`install module` currently prints what would be installed; GitHub clone logic is
-stubbed while the module manifests are refined.
-
-## Using ZelUtil from code
-
-```python
-from zelutil import resolve_state_dir, get_path, set_path
-
-state_dir = resolve_state_dir()
-logs = state_dir / "timers.json"
-
-projects = get_path("projects", default="~/Projects")
-set_path("media", "/mnt/media")
-```
-
-When bundled into other modules, these helpers keep every CLI grounded in the
-same configuration without hard-coded paths.
+To remove everything:
+1. Delete the installation directory: `~/.local/share/zel/`
+2. Remove from your shell config (look for "# Zel tools" in `~/.bashrc` or `~/.zshrc`)
+3. Optionally delete your data: `~/.local/state/zel/`
