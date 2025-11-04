@@ -36,10 +36,46 @@ That's it! This will:
 Want to install somewhere specific? Download and run with `--install-dir`:
 
 ```bash
-# Download first, then run with custom directory
-wget https://raw.githubusercontent.com/Zeldean/zelutil/main/bootstrap-zel.py
+# Download and run with custom directory
+curl -o bootstrap-zel.py https://raw.githubusercontent.com/Zeldean/zelutil/main/bootstrap-zel.py
 python3 bootstrap-zel.py --install-dir ~/my-zel-tools
 ```
+
+---
+
+## 🔧 Development Setup
+
+For local development and testing:
+
+```bash
+# Clone the repository
+git clone https://github.com/Zeldean/zelutil.git
+cd zelutil
+
+# Run local development install
+python3 dev-install.py
+```
+
+**What this does:**
+- Creates `../temp_venv/` (isolated from main installation)
+- Installs zelutil in editable mode for live development
+- Provides direct path to test commands
+
+**Usage after dev install:**
+```bash
+# Test your changes directly
+../temp_venv/bin/zelutil --help
+
+# Or activate the environment
+source ../temp_venv/bin/activate
+zelutil --help
+```
+
+**Benefits:**
+- 🔄 Changes reflect immediately (no reinstall needed)
+- 🔒 Isolated from your main zel installation
+- 🧪 Perfect for testing new features
+- 🚀 No need to push to GitHub for every test
 
 ---
 
