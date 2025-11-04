@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 def load_modules():
     """Load module configuration bundled with the package."""
     try:
-        with resources.open_text("zelcandy.data", "zel-modules.json", encoding="utf-8") as fh:
+        with resources.open_text("zelutil.data", "zel-modules.json", encoding="utf-8") as fh:
             data = json.load(fh)
     except (FileNotFoundError, ModuleNotFoundError):
         return {}
@@ -35,7 +35,7 @@ def get_module_names():
 
 @click.group()
 def main():
-    """ZelCandy — Shared configuration for Zel CLI tools."""
+    """ZelUtil — Shared configuration for Zel CLI tools."""
     pass
 
 @main.group()

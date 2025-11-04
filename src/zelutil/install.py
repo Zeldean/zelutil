@@ -56,7 +56,7 @@ def add_to_path(bin_path):
 def load_modules():
     """Load module configuration from packaged metadata."""
     try:
-        with resources.open_text("zelcandy.data", "zel-modules.json", encoding="utf-8") as fh:
+        with resources.open_text("zelutil.data", "zel-modules.json", encoding="utf-8") as fh:
             payload = json.load(fh)
     except (FileNotFoundError, ModuleNotFoundError):
         return {}

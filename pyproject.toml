@@ -3,7 +3,7 @@ requires = ["setuptools>=65", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "zelcandy"
+name = "zelutil"
 version = "1.0.0"
 description = "Shared configuration and path management for Zel CLI tools"
 readme = "README.md"
@@ -19,7 +19,7 @@ dependencies = [
 ]
 
 [project.scripts]
-zelcandy = "zelcandy.cli:main"
+zelutil = "zelutil.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

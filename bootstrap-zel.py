@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Bootstrap script to install ZelCandy and set up the Zel ecosystem.
+Bootstrap script to install ZelUtil and set up the Zel ecosystem.
 Can be run directly from GitHub or locally.
 
 Usage:
-  curl -sSL https://raw.githubusercontent.com/Zeldean/zelcandy/main/bootstrap-zel.py | python3
+  curl -sSL https://raw.githubusercontent.com/Zeldean/zelutil/main/bootstrap-zel.py | python3
   or
   python3 bootstrap-zel.py [--install-dir PATH]
 """
@@ -31,14 +31,14 @@ def get_venv_path():
     else:
         return Path.home() / ".local" / "share" / "zel-env"
 
-def clone_zelcandy(install_dir):
-    """Clone zelcandy repository"""
-    zelcandy_url = "https://github.com/Zeldean/zelcandy.git"
-    zelcandy_dir = install_dir / "zelcandy"
+def clone_zelutil(install_dir):
+    """Clone zelutil repository"""
+    zelutil_url = "https://github.com/Zeldean/zelutil.git"
+    zelutil_dir = install_dir / "zelutil"
     
-    print(f"Cloning zelcandy to {zelcandy_dir}...")
-    subprocess.run(["git", "clone", zelcandy_url, str(zelcandy_dir)], check=True)
-    return zelcandy_dir
+    print(f"Cloning zelutil to {zelutil_dir}...")
+    subprocess.run(["git", "clone", zelutil_url, str(zelutil_dir)], check=True)
+    return zelutil_dir
 
 def main():
     parser = argparse.ArgumentParser(description="Bootstrap Zel tools installation")
@@ -53,13 +53,13 @@ def main():
     # Create install directory
     install_dir.mkdir(parents=True, exist_ok=True)
     
-    # Clone zelcandy
-    zelcandy_dir = clone_zelcandy(install_dir)
+    # Clone zelutil
+    zelutil_dir = clone_zelutil(install_dir)
     
-    # Run zelcandy install script
-    install_script = zelcandy_dir / "src" / "zelcandy" / "install.py"
-    print("Running zelcandy install script...")
-    subprocess.run([sys.executable, str(install_script)], check=True, cwd=str(zelcandy_dir))
+    # Run zelutil install script
+    install_script = zelutil_dir / "src" / "zelutil" / "install.py"
+    print("Running zelutil install script...")
+    subprocess.run([sys.executable, str(install_script)], check=True, cwd=str(zelutil_dir))
     
     print(f"\nZel tools installed successfully!")
     print(f"Installation directory: {install_dir}")
