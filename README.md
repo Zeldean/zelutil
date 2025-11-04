@@ -6,8 +6,14 @@ The foundation of the Zel productivity suite - handles installation, configurati
 
 Install ZelUtil and set up the Zel ecosystem with one command:
 
+**Linux/macOS:**
 ```bash
 curl -sSL https://raw.githubusercontent.com/Zeldean/zelutil/main/bootstrap-zel.py | python3
+```
+
+**Windows PowerShell 5+:**
+```powershell
+irm https://raw.githubusercontent.com/Zeldean/zelutil/main/bootstrap-zel.py | python
 ```
 
 That's it! This will:
@@ -17,10 +23,12 @@ That's it! This will:
 
 ## Custom Installation
 
-Want to install somewhere specific? Use the `--install-dir` option:
+Want to install somewhere specific? Download and run with `--install-dir`:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/Zeldean/zelutil/main/bootstrap-zel.py | python3 - --install-dir ~/my-zel-tools
+# Download first, then run with custom directory
+wget https://raw.githubusercontent.com/Zeldean/zelutil/main/bootstrap-zel.py
+python3 bootstrap-zel.py --install-dir ~/my-zel-tools
 ```
 
 ## What Gets Installed Where

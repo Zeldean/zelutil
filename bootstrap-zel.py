@@ -29,12 +29,16 @@ def get_venv_path():
     return get_install_dir() / "venv"
 
 def clone_zelutil(install_dir):
-    """Clone zelutil repository"""
+    """Clone or update zelutil repository"""
     zelutil_url = "https://github.com/Zeldean/zelutil.git"
     zelutil_dir = install_dir / "zelutil"
     
-    print(f"Cloning zelutil to {zelutil_dir}...")
-    subprocess.run(["git", "clone", zelutil_url, str(zelutil_dir)], check=True)
+    if zelutil_dir.exists():
+        print(f"Updating existing zelutil at {zelutil_dir}...")
+        subprocess.run(["git", "pull"], cwd=str(zelutil_dir), check=True)
+    else:
+        print(f"Cloning zelutil to {zelutil_dir}...")
+        subprocess.run(["git", "clone", zelutil_url, str(zelutil_dir)], check=True)
     return zelutil_dir
 
 def main():
@@ -59,6 +63,32 @@ def main():
     
     print(f"State directory: {state_dir}")
     
+    # Check if already in PATH
+    venv_path = get_venv_path()
+    if platform.system() == "Windows":
+        bin_path = venv_path / "Scripts"
+    else:
+        bin_path = venv_path / "bin"
+    
+    path_env = os.environ.get("PATH", "")
+    if str(bin_path) not in path_env:
+        print(f"\nIMPORTANT: Add {bin_path} to your PATH to use zel commands.")
+        if platform.system() == "Windows":
+            print(f"Run: setx PATH \"%PATH%;{bin_path}\"")
+            print("Or add it manually through System Properties > Environment Variables")
+        else:
+            shell = os.environ.get("SHELL", "")
+            if "zsh" in shell:
+                config_file = "~/.zshrc"
+            elif "fish" in shell:
+                config_file = "~/.config/fish/config.fish"
+            else:
+                config_file = "~/.bashrc"
+            print(f"The install script should have added it to {config_file}")
+            print(f"Restart your shell or run: source {config_file}")
+    else:
+        print("\nzel commands should be available in your PATH.")
+    
     # Clone zelutil
     zelutil_dir = clone_zelutil(install_dir)
     
@@ -70,7 +100,7 @@ def main():
     print(f"\nZel tools installed successfully!")
     print(f"Installation directory: {install_dir}")
     print(f"Virtual environment: {get_venv_path()}")
-    print("\nRestart your shell or run: source ~/.bashrc (or ~/.zshrc)")
+    print(f"\nTry running: zelutil --help")
 
 if __name__ == "__main__":
     main()
