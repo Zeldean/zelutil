@@ -34,8 +34,17 @@ def get_shell_config():
 def add_to_path(bin_path):
     """Add to PATH based on platform"""
     if platform.system() == "Windows":
-        print(f"Add to PATH manually: {bin_path}")
-        print("Or run: setx PATH \"%PATH%;{bin_path}\"")
+        print(f"\n=== WINDOWS PATH SETUP ===")
+        print(f"To use 'zelutil' command, add this to your PATH:")
+        print(f"  {bin_path}")
+        print(f"\nOption 1 - PowerShell (run as Administrator):")
+        print(f'  setx PATH "$env:PATH;{bin_path}" /M')
+        print(f"\nOption 2 - Current session only:")
+        print(f'  $env:PATH += ";{bin_path}"')
+        print(f"\nOption 3 - System Properties:")
+        print(f"  1. Win+R → sysdm.cpl → Advanced → Environment Variables")
+        print(f"  2. Edit PATH → Add: {bin_path}")
+        print(f"\nAfter adding, restart PowerShell and try: zelutil --help")
         return
     
     shell_config = get_shell_config()
