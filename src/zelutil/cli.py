@@ -148,6 +148,8 @@ def update_modules():
     
     if updated:
         click.echo(f"\n✅ Updated: {', '.join(updated)}")
+        click.echo("\nReinstalling updated modules...")
+        install_modules.callback()
     if failed:
         click.echo(f"❌ Failed: {', '.join(failed)}")
     if not updated and not failed:
