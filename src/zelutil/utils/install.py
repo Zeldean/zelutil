@@ -8,7 +8,24 @@ from importlib import resources
 from pathlib import Path
 
 def get_install_dir():
-    """Get installation directory"""
+    """Get installation directory from stored paths or default"""
+    # Try to get stored install location
+    if platform.system() == "Windows":
+        state_dir = Path.home() / "AppData" / "Local" / "zel" / "state"
+    else:
+        state_dir = Path.home() / ".local" / "state" / "zel"
+    
+    paths_file = state_dir / "paths.json"
+    if paths_file.exists():
+        try:
+            with open(paths_file, 'r') as f:
+                paths_data = json.load(f)
+                if "install_dir" in paths_data:
+                    return Path(paths_data["install_dir"])
+        except (json.JSONDecodeError, KeyError):
+            pass
+    
+    # Fall back to default location
     if platform.system() == "Windows":
         return Path.home() / "AppData" / "Local" / "zel"
     else:
@@ -16,7 +33,14 @@ def get_install_dir():
 
 def get_venv_path():
     """Get platform-appropriate venv path"""
-    return get_install_dir() / "venv"
+    install_dir = get_install_dir()
+    
+    # Check if we're in development mode (temp_venv exists)
+    temp_venv = install_dir / "temp_venv"
+    if temp_venv.exists():
+        return temp_venv
+    
+    return install_dir / "venv"
 
 def get_shell_config():
     """Get shell config file path"""
@@ -98,8 +122,11 @@ def main():
         print("No module metadata available; nothing to install.")
         return
     
-    print(f"Creating zel virtual environment at {venv_path}...")
-    subprocess.run([sys.executable, "-m", "venv", str(venv_path)], check=True)
+    if not venv_path.exists():
+        print(f"Creating zel virtual environment at {venv_path}...")
+        subprocess.run([sys.executable, "-m", "venv", str(venv_path)], check=True)
+    else:
+        print(f"Using existing virtual environment at {venv_path}...")
     
     # Get executables
     if platform.system() == "Windows":

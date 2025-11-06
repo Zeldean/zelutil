@@ -14,6 +14,7 @@ from .utils.state import resolve_state_dir
 
 logger = logging.getLogger(__name__)
 
+# ===================================================================================================
 
 @lru_cache(maxsize=1)
 def load_modules():
@@ -32,11 +33,6 @@ def load_modules():
 def get_module_names():
     """Get list of module names"""
     return list(load_modules().keys())
-
-@click.group()
-def util():
-    """ZelUtil — Shared configuration for Zel CLI tools"""
-    pass
 
 def get_install_dir():
     """Get installation directory from stored paths or default"""
@@ -63,6 +59,13 @@ def get_install_dir():
         return Path.home() / "AppData" / "Local" / "zel"
     else:
         return Path.home() / ".local" / "share" / "zel"
+
+# === UTIL ==========================================================================================
+
+@click.group()
+def util():
+    """ZelUtil — Shared configuration for Zel CLI tools"""
+    pass
 
 @util.command("get")
 @click.argument("module")
@@ -104,10 +107,84 @@ def clone_module(module):
         click.echo(f"Error: {result.stderr}", err=True)
         sys.exit(1)
 
-# @util.group()
-# def path():
-#     """Manage paths."""
-#     pass
+@util.command("install")
+def install_modules():
+    """Run the main install script to install all zel tools."""
+    install_script = Path(__file__).parent / "utils" / "install.py"
+    if install_script.exists():
+        click.echo("Running install script...")
+        subprocess.run([sys.executable, str(install_script)], check=True)
+    else:
+        click.echo("Install script not found.")
+
+@util.command("update")
+def update_modules():
+    """Update all installed zel modules."""
+    install_dir = get_install_dir()
+    modules = load_modules()
+    
+    if not modules:
+        click.echo("No modules configured.")
+        return
+    
+    updated = []
+    failed = []
+    
+    for module in modules.keys():
+        module_dir = install_dir / module
+        if module_dir.exists():
+            click.echo(f"Updating {module}...")
+            result = subprocess.run(
+                ["git", "pull"], 
+                cwd=module_dir, 
+                capture_output=True, 
+                text=True
+            )
+            if result.returncode == 0:
+                updated.append(module)
+            else:
+                failed.append(module)
+                click.echo(f"Failed to update {module}: {result.stderr}", err=True)
+    
+    if updated:
+        click.echo(f"\n✅ Updated: {', '.join(updated)}")
+    if failed:
+        click.echo(f"❌ Failed: {', '.join(failed)}")
+    if not updated and not failed:
+        click.echo("No modules found to update.")
+    
+
+# === PATH ==========================================================================================
+
+@util.group()
+def path():
+    """Manage paths."""
+    pass
+
+@path.command("list")
+def list_paths():
+    """List all configured paths."""
+    import json
+    paths_file = resolve_state_dir() / "paths.json"
+    if paths_file.exists():
+        with open(paths_file) as f:
+            paths = json.load(f)
+            for key, value in paths.items():
+                click.echo(f"{key}: {value}")
+    else:
+        click.echo("No paths configured")
+
+# ===================================================================================================
+
+
+
+
+
+
+
+
+
+
 
 # @path.command("set")
 # @click.argument("key")
@@ -127,18 +204,6 @@ def clone_module(module):
 #     except ValueError as e:
 #         click.echo(f"Error: {e}", err=True)
 
-# @path.command("list")
-# def list_paths():
-#     """List all configured paths."""
-#     import json
-#     paths_file = resolve_state_dir() / "paths.json"
-#     if paths_file.exists():
-#         with open(paths_file) as f:
-#             paths = json.load(f)
-#             for key, value in paths.items():
-#                 click.echo(f"{key}: {value}")
-#     else:
-#         click.echo("No paths configured")
 
 # @path.command("available")
 # def available_paths():
@@ -169,15 +234,6 @@ def clone_module(module):
 #         status = "✓" if info.get("installed_version") else "○"
 #         click.echo(f"  {status} {name} - {info['description']}")
 
-# @install.command("all")
-# def install_all():
-#     """Run the main install script to install all zel tools."""
-#     install_script = Path(__file__).parent / "utils" / "install.py"
-#     if install_script.exists():
-#         click.echo("Running install script...")
-#         subprocess.run([sys.executable, str(install_script)], check=True)
-#     else:
-#         click.echo("Install script not found.")
 
 # @install.command("module")
 # @click.argument("module_name")
