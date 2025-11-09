@@ -24,6 +24,11 @@
       "name": "ZelTimer",
       "description": "Time tracking tool",
       "git_url": "https://github.com/Zeldean/zeltimer.git"
+    },
+    "zeltask": {
+        "name": "zelTask",
+        "description": "Task managemnt tool",
+        "git_url": "https://github.com/Zeldean/zeltask.git" 
     }
   }
 }
